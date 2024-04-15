@@ -1,0 +1,34 @@
+import tkinter as tk
+import RPi.GPIO as GPIO
+
+# Setup the GPIO pins
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+led_pins = {'Red': 17, 'Green': 27}
+for pin in led_pins.values():
+    GPIO.setup(pin, GPIO.OUT)
+    GPIO.output(pin, GPIO.LOW)
+
+# Function to turn on selected LED
+def select_led(led_color):
+    for color, pin in led_pins.items():
+        GPIO.output(pin, GPIO.HIGH if color == led_color else GPIO.LOW)
+
+# Create the main window
+root = tk.Tk()
+root.title("LED Control")
+
+# Variable to hold the selected LED color
+selected_led = tk.StringVar()
+
+# Create radio buttons for Red and Green LEDs
+for color in led_pins.keys():
+    radio = tk.Radiobutton(root, text=color, variable=selected_led, value=color, command=lambda: select_led(selected_led.get()))
+    radio.pack(anchor=tk.W)
+
+# Button to exit GUI
+exit_button = tk.Button(root, text="Exit", command=root.destroy)
+exit_button.pack(side=tk.BOTTOM)
+
+# Run the GUI event loop
+root.mainloop()
